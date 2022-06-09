@@ -8,8 +8,8 @@ function bolt_notebook() {
             "browse $bolt_asset_name/notebook.ipynb [and pass args]."
         bolt_help_line "notebook build [notebook]" \
             "build $bolt_asset_name/notebook.ipynb."
-        bolt_help_line "notebook host [notebook]" \
-            "host $bolt_asset_name/notebook.ipynb on ec2."
+        bolt_help_line "notebook host [notebook] [setup]" \
+            "[setup and] host $bolt_asset_name/notebook.ipynb on ec2."
         return
     fi
 
@@ -41,6 +41,7 @@ function bolt_notebook() {
         return
     fi
 
+    # https://docs.aws.amazon.com/dlami/latest/devguide/setup-jupyter.html
     if [ "$task" == "host" ] ; then
         echo "wip"
         return

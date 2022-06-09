@@ -8,8 +8,8 @@ function bolt_notebook() {
             "browse $bolt_asset_name/notebook.ipynb [and pass args]."
         bolt_help_line "notebook build [notebook]" \
             "build $bolt_asset_name/notebook.ipynb."
-        bolt_help_line "notebook connect 1-2-3-4" \
-            "connect to jupyter notebook on ec2:1-2-3-4."
+        bolt_help_line "notebook connect 1-2-3-4 [setup]" \
+            "[setup and] connect to jupyter notebook on ec2:1-2-3-4."
         bolt_help_line "notebook host [setup]" \
             "[setup and] host jupyter notebook on ec2."
         return
@@ -47,12 +47,16 @@ function bolt_notebook() {
 
     # https://docs.aws.amazon.com/dlami/latest/devguide/setup-jupyter.html
     if [ "$task" == "connect" ] ; then
-        local ip_address=$(echo "$2" | tr . -)
+        local options="$3"
+        local do_setup=$(bolt_option_int "$options" "setup" 0)
 
-        ssh \
-            -i $bolt_path_git/bolt/assets/aws/bolt.pem \
-            -N -f -L 8888:localhost:8888 \
-            ubuntu@ec2-$ip_address.$bolt_s3_region.compute.amazonaws.com
+        if [ "$do_setup" == 1 ] ; then
+            local ip_address=$(echo "$2" | tr . -)
+            ssh \
+                -i $bolt_path_git/bolt/assets/aws/bolt.pem \
+                -N -f -L 8888:localhost:8888 \
+                ubuntu@ec2-$ip_address.$bolt_s3_region.compute.amazonaws.com
+        fi
 
         open https://localhost:8888
         return

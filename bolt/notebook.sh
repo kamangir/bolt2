@@ -14,7 +14,7 @@ function bolt_notebook() {
     fi
 
     local notebook_name=$2
-    if [ -z "$notebook_name" ] or [ "$notebook_name" == "-" ] ; then
+    if [ -z "$notebook_name" ] || [ "$notebook_name" == "-" ] ; then
         local notebook="notebook"
     fi
 

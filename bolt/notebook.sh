@@ -8,17 +8,19 @@ function bolt_notebook() {
             "browse $bolt_asset_name/notebook.ipynb [and pass args]."
         bolt_help_line "notebook build [notebook]" \
             "build $bolt_asset_name/notebook.ipynb."
-        bolt_help_line "notebook host [notebook] [setup]" \
-            "[setup and] host $bolt_asset_name/notebook.ipynb on ec2."
+        bolt_help_line "notebook host [setup]" \
+            "[setup and] host jupyter notebook on ec2."
         return
     fi
 
-    local notebook_name=$2
-    if [ -z "$notebook_name" ] || [ "$notebook_name" == "-" ] ; then
-        local notebook="notebook"
-    fi
+    if [ "$task" == "build" ] || [ "$task" == "browse" ] ; then
+        local notebook_name=$2
+        if [ -z "$notebook_name" ] || [ "$notebook_name" == "-" ] ; then
+            local notebook="notebook"
+        fi
 
-    export bolt_notebook_input="${@:3}"
+        export bolt_notebook_input="${@:3}"
+    fi
 
     if [ "$task" == "build" ] ; then
         jupyter-nbconvert $notebook_name.ipynb -y --ExecutePreprocessor.timeout=-1 --execute --allow-errors --to html --output-dir $bolt_asset_folder
@@ -47,6 +49,11 @@ function bolt_notebook() {
         local do_setup=$(bolt_option_int "$options" "setup" 0)
 
         if [ "$do_setup" == 1 ] ; then
+            if [ "$bolt_is_ec2" != true ] ; then
+                bolt_log_error "ec2 function called."
+                return
+            fi
+
             jupyter notebook password
 
             mkdir -p $bolt_path_home/ssl

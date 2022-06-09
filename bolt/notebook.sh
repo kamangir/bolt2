@@ -53,6 +53,8 @@ function bolt_notebook() {
             -i $bolt_path_git/bolt/assets/aws/bolt.pem \
             -N -f -L 8888:localhost:8888 \
             ubuntu@ec2-$ip_address.$bolt_s3_region.compute.amazonaws.com
+
+        open https://localhost:8888
         return
     fi
 

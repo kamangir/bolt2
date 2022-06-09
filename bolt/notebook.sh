@@ -55,7 +55,10 @@ function bolt_notebook() {
                 -out $bolt_path_home/ssl/mycert.pem
         fi
 
-        echo "wip"
+        jupyter notebook \
+            --certfile=$bolt_path_home/ssl/mycert.pem \
+            --keyfile $bolt_path_home/ssl/mykey.key
+
         return
     fi
 

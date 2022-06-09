@@ -13,25 +13,29 @@ function bolt_notebook() {
         return
     fi
 
-    bolt_tag set $bolt_asset_name notebook
-
     local notebook_name=$2
     if [ -z "$notebook_name" ] or [ "$notebook_name" == "-" ] then
         local notebook="notebook"
     fi
+
     export bolt_notebook_input="${@:3}"
 
     if [ "$task" == "build" ] ; then
         jupyter-nbconvert $notebook_name.ipynb -y --ExecutePreprocessor.timeout=-1 --execute --allow-errors --to html --output-dir $bolt_asset_folder
+
         mv $bolt_asset_folder/$notebook_name.html $bolt_asset_folder/$bolt_asset_name.html
+
         return
     fi
 
     if [ "$task" == "browse" ] ; then
+        bolt_tag set $bolt_asset_name notebook
+
         if [ ! -f $notebook_name.ipynb ]; then
             cp $bolt_path_bolt/assets/script/notebook.ipynb ./$notebook_name.ipynb
             bolt_log "$notebook_name.ipynb copied."
-        fi    
+        fi
+
         jupyter notebook
 
         return

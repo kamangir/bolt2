@@ -43,6 +43,18 @@ function bolt_notebook() {
 
     # https://docs.aws.amazon.com/dlami/latest/devguide/setup-jupyter.html
     if [ "$task" == "host" ] ; then
+        local options="$3"
+        local do_setup=$(bolt_option_int "$options" "setup" 0)
+
+        if [ "$do_setup" == 1 ] ; then
+            jupyter notebook password
+
+            mkdir -p $bolt_path_home/ssl
+            openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+                -keyout $bolt_path_home/ssl/mykey.key \
+                -out $bolt_path_home/ssl/mycert.pem
+        fi
+
         echo "wip"
         return
     fi

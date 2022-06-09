@@ -8,6 +8,8 @@ function bolt_notebook() {
             "browse $bolt_asset_name/notebook.ipynb [and pass args]."
         bolt_help_line "notebook build [notebook]" \
             "build $bolt_asset_name/notebook.ipynb."
+        bolt_help_line "notebook connect 1-2-3-4" \
+            "connect to jupyter notebook on ec2:1-2-3-4."
         bolt_help_line "notebook host [setup]" \
             "[setup and] host jupyter notebook on ec2."
         return
@@ -45,15 +47,15 @@ function bolt_notebook() {
 
     # https://docs.aws.amazon.com/dlami/latest/devguide/setup-jupyter.html
     if [ "$task" == "host" ] ; then
+        if [ "$bolt_is_ec2" != true ] ; then
+            bolt_log_error "ec2 function called."
+            return
+        fi
+
         local options="$3"
         local do_setup=$(bolt_option_int "$options" "setup" 0)
 
         if [ "$do_setup" == 1 ] ; then
-            if [ "$bolt_is_ec2" != true ] ; then
-                bolt_log_error "ec2 function called."
-                return
-            fi
-
             jupyter notebook password
 
             mkdir -p $bolt_path_home/ssl

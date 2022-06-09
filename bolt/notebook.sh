@@ -46,6 +46,16 @@ function bolt_notebook() {
     fi
 
     # https://docs.aws.amazon.com/dlami/latest/devguide/setup-jupyter.html
+    if [ "$task" == "connect" ] ; then
+        local ip_address=$(echo "$2" | tr . -)
+
+        ssh \
+            -i $bolt_path_git/bolt/assets/aws/bolt.pem \
+            -N -f -L 8888:localhost:8888 \
+            ubuntu@ec2-$ip_address.$bolt_s3_region.compute.amazonaws.com
+        return
+    fi
+
     if [ "$task" == "host" ] ; then
         if [ "$bolt_is_ec2" != true ] ; then
             bolt_log_error "ec2 function called."

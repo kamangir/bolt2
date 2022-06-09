@@ -25,7 +25,11 @@ function bolt_notebook() {
     fi
 
     if [ "$task" == "build" ] ; then
-        jupyter-nbconvert $notebook_name.ipynb -y --ExecutePreprocessor.timeout=-1 --execute --allow-errors --to html --output-dir $bolt_asset_folder
+        jupyter-nbconvert \
+            $notebook_name.ipynb \
+            -y --ExecutePreprocessor.timeout=-1 --execute --allow-errors \
+            --to html \
+            --output-dir $bolt_asset_folder
 
         mv $bolt_asset_folder/$notebook_name.html $bolt_asset_folder/$bolt_asset_name.html
 
@@ -33,8 +37,6 @@ function bolt_notebook() {
     fi
 
     if [ "$task" == "browse" ] ; then
-        bolt_tag set $bolt_asset_name notebook
-
         if [ ! -f $notebook_name.ipynb ]; then
             cp $bolt_path_bolt/assets/script/notebook.ipynb ./$notebook_name.ipynb
             bolt_log "$notebook_name.ipynb copied."
@@ -63,11 +65,6 @@ function bolt_notebook() {
     fi
 
     if [ "$task" == "host" ] ; then
-        if [ "$bolt_is_ec2" != true ] ; then
-            bolt_log_error "ec2 function called."
-            return
-        fi
-
         local options="$3"
         local do_setup=$(bolt_option_int "$options" "setup" 0)
 

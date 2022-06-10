@@ -18,7 +18,7 @@ function bolt_notebook() {
     if [ "$task" == "build" ] || [ "$task" == "browse" ] ; then
         local notebook_name=$2
         if [ -z "$notebook_name" ] || [ "$notebook_name" == "-" ] ; then
-            local notebook="notebook"
+            local notebook_name="notebook"
         fi
 
         export bolt_notebook_input="${@:3}"

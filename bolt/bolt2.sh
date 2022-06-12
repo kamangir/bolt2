@@ -8,12 +8,12 @@ function bolt_bolt2() {
     local task=$(bolt_unpack_keyword $1 help)
     
     if [ "$task" == "help" ] ; then
-        bolt_help_line "bolt2 create_conda_env" \
-            "create conda env."
+        bolt_help_line "bolt2 terraform" \
+            "terraform bolt2."
         return
     fi
 
-    if [ "$task" == "create_conda_env" ] ; then
+    if [ "$task" == "terraform" ] ; then
         conda activate base
         conda remove -y --name bolt2 --all
 

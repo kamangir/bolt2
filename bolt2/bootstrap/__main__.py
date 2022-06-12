@@ -1,7 +1,7 @@
 import argparse
 
 from .. import version
-from .utils import *
+from . import *
 
 app_name = "bolt2.bootstrap"
 

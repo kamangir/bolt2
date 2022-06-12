@@ -32,8 +32,13 @@ function bolt_bolt2() {
         # https://stackoverflow.com/a/65993776/17619982
         conda install -y numpy==1.19.5
 
-        pushd $bolt_path_bolt > /dev/null
-        pip3 install -e .
+        pushd $bolt_path_git > /dev/null
+        local folder
+        for folder in bolt bolt2 ; do
+            cd $folder
+            pip3 install -e .
+            cd ..
+        done
         popd > /dev/null
 
         return

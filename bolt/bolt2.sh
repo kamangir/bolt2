@@ -8,6 +8,8 @@ function bolt_bolt2() {
     local task=$(bolt_unpack_keyword $1 help)
     
     if [ "$task" == "help" ] ; then
+        bolt_help_line "bolt2 validate" \
+            "validate bolt2."
         bolt_help_line "bolt2 terraform" \
             "terraform bolt2."
         return
@@ -34,6 +36,12 @@ function bolt_bolt2() {
         pip3 install -e .
         popd > /dev/null
 
+        return
+    fi
+
+    if [ "$task" == "validate" ] ; then
+        python3 -m bolt2.bootstrap \
+            validate
         return
     fi
 

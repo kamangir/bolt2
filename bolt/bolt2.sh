@@ -27,6 +27,9 @@ function bolt_bolt2() {
         conda install -y pandas
         conda install -y -c conda-forge scikit-learn
 
+        # https://stackoverflow.com/a/65993776/17619982
+        conda install -y numpy==1.19.5
+
         pushd $bolt_path_bolt > /dev/null
         pip3 install -e .
         popd > /dev/null

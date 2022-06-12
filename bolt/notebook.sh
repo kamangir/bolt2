@@ -65,7 +65,7 @@ function bolt_notebook() {
     fi
 
     if [ "$task" == "host" ] ; then
-        local options="$3"
+        local options="$2"
         local do_setup=$(bolt_option_int "$options" "setup" 0)
 
         if [ "$do_setup" == 1 ] ; then

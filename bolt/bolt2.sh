@@ -42,6 +42,8 @@ function bolt_bolt2() {
     if [ "$task" == "validate" ] ; then
         python3 -m bolt2.bootstrap \
             validate
+        lspci -v | grep NVIDIA
+        nvidia-smi
         return
     fi
 

@@ -25,6 +25,7 @@ function bolt_bolt2() {
         conda install -y -c conda-forge matplotlib
         conda install -y -c conda-forge jupyter
         conda install -y pandas
+        conda install -y -c conda-forge scikit-learn
 
         pushd $bolt_path_bolt > /dev/null
         pip3 install -e .

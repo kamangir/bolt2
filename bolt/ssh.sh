@@ -4,16 +4,16 @@ function bolt_ssh() {
     local task=$(bolt_unpack_keyword $1 help)
 
     if [ "$task" == "help" ] ; then
-        bolt_help_line "ssh ec2/jetson_nano/rpi 1-2-3-4 [./vnc/worker/worker,gpu] [platform] [region]" \
-            "ssh to 1-2-3-4 [on platform] [on region] [for vnc/worker/worker,gpu]"
+        bolt_help_line "ssh ec2/jetson_nano/rpi 1-2-3-4 [./vnc/worker/worker,gpu] [region=region_1,user=ec2-user/ubuntu]" \
+            "ssh to 1-2-3-4 [on region_1] [for vnc/worker/worker,gpu] [as user]."
         return
     fi
 
     local kind=$1
     local address="$2"
     local intent="$3"
-    local platform="$4"
-    local region="$5"
+
+    local options="$4"
 
     if [ -z "$address" ] ; then
         bolt_log_error "ssh address unknown."
@@ -22,35 +22,24 @@ function bolt_ssh() {
 
     if [ "$kind" == "ec2" ] ; then
         local ip_address=$(echo "$address" | tr . -)
-
-        if [ -z "$region" ] ; then
-            local region=$bolt_s3_region
-        fi
-
-        local user="ubuntu"
+        local region=$(bolt_option "$options" "region" $bolt_s3_region)
         local url="ec2-$ip_address.$region.compute.amazonaws.com"
 
         ssh-keyscan $url >> ~/.ssh/known_hosts
 
+        local user=$(bolt_option "$options" user ubuntu)
         local url="$user@$url"
 
-        bolt_log "ssh to $url started: $intent $platform"
+        bolt_log "ssh to $url started: $intent"
 
         bolt_seed ec2 clipboard $intent
 
-        local path=$bolt_path_git/bolt/assets/aws
-        local pem_filename="bolt"
-        if [ ! -z "$platform" ] ; then
-            local path=$bolt_path_git/$platform/assets/aws
-            local pem_filename=$platform
-        fi
-
-        pushd $path > /dev/null
-        chmod 400 $pem_filename.pem
+        pushd $bolt_path_git/bolt/assets/aws > /dev/null
+        chmod 400 bolt.pem
         if [[ "$intent" == "vnc" ]] ; then
-            ssh -i $pem_filename.pem -L 5901:localhost:5901 $url
+            ssh -i bolt.pem -L 5901:localhost:5901 $url
         else
-            ssh -i $pem_filename.pem ${url}
+            ssh -i bolt.pem $url
         fi
         popd > /dev/null
     elif [ "$kind" == "jetson_nano" ] ; then

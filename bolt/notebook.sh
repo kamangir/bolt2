@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
 
 function bolt_notebook() {
-    local task=$(bolt_unpack_keyword "$1" help)
+    local task=$(bolt_unpack_keyword "$1" browse)
 
     if [ "$task" == "help" ] ; then
-        bolt_help_line "notebook browse [notebook] [args]" \
+        bolt_help_line "notebook [browse] [notebook] [args]" \
             "browse $bolt_asset_name/notebook.ipynb [and pass args]."
         bolt_help_line "notebook build [notebook]" \
             "build $bolt_asset_name/notebook.ipynb."
